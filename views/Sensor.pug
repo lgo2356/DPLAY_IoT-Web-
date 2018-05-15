@@ -1,0 +1,123 @@
+doctype html
+html
+head
+    meta(charset='UTF-8')
+    title DPLAY IoT
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+    style
+        include ../style/mainLayout.css
+body
+    div#wapper
+        div.member
+            button.btn_member.Home(onclick="location.href='/'") HOME
+        header
+            span(style='color:black') Sensor
+        div.menubar
+            button.btn.LED(onclick="location.href='/LED'") LED
+            button.btn.Sensor(onclick="location.href='/Sensor'") Sensor
+            button.btn.Motor(onclick="location.href='/Motor'") DC Motor
+            button.btn.Motor(onclick="location.href='/Servo'") Servo
+            button.btn.Button(onclick="location.href='/Button'") Button
+            button.btn.Button(onclick="location.href='/Tilt'") Tilt
+            button.btn.Buzzer(onclick="location.href='/Buzzer'") Buzzer
+            button.btn.Settings(onclick="location.href='/Settings'") Settings
+        div.content
+            div.sensor_pin_group
+                button#CDS.btn_sensor.sensor(type='button') 조도 센서
+                button#ROTATION.btn_sensor.sensor(type='button') 가변저항
+                button#IR.btn_sensor.sensor(type='button') 적외선 센서
+                button#TEMPERATURE.btn_sensor.sensor(type='button') 온도 센서
+                button#HUMIDITY.btn_sensor.sensor(type='button') 습도 센서
+            div.sensor_pin_group
+                button#PIN00ON.btn_sensor_pin.pin(type='button') PIN 00 ON
+                button#PIN01ON.btn_sensor_pin.pin(type='button') PIN 01 ON
+                button#PIN02ON.btn_sensor_pin.pin(type='button') PIN 02 ON
+                button#PIN03ON.btn_sensor_pin.pin(type='button') PIN 03 ON
+                button#PIN04ON.btn_sensor_pin.pin(type='button') PIN 04 ON
+                button#PIN05ON.btn_sensor_pin.pin(type='button') PIN 05 ON
+                button#PINALLON.btn_sensor_pin.pin(type='button') ALL ON
+            div.sensor_pin_group
+                button#PIN00OFF.btn_sensor_pin.pin_off(type='button') PIN 00 OFF
+                button#PIN01OFF.btn_sensor_pin.pin_off(type='button') PIN 01 OFF
+                button#PIN02OFF.btn_sensor_pin.pin_off(type='button') PIN 02 OFF
+                button#PIN03OFF.btn_sensor_pin.pin_off(type='button') PIN 03 OFF
+                button#PIN04OFF.btn_sensor_pin.pin_off(type='button') PIN 04 OFF
+                button#PIN05OFF.btn_sensor_pin.pin_off(type='button') PIN 05 OFF
+                button#PINALLOFF.btn_sensor_pin.pin_off(type='button') ALL OFF
+            div.sensor_value_group
+                div(style='color:white') Sensor value
+                br
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN00: &nbsp;
+                    span#result00.display_sensor_value(style='color:white') 0
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN01: &nbsp;
+                    span#result01.display_sensor_value(style='color:white') 0
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN02: &nbsp;
+                    span#result02.display_sensor_value(style='color:white') 0
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN03: &nbsp;
+                    span#result03.display_sensor_value(style='color:white') 0
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN04: &nbsp;
+                    span#result04.display_sensor_value(style='color:white') 0
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN05: &nbsp;
+                    span#result05.display_sensor_value(style='color:white') 0
+                div#result06 0
+    script.
+        $(document).ready(function () {
+            var timer;
+            var sensor;
+            var msg;
+            $('.sensor').click(function() {
+                sensor = $(this).attr('id');
+            });
+            $('.pin').click(function () {
+                clearInterval(timer);
+                const pin = $(this).attr('id');
+                $.ajax({
+                    url: 'http://localhost:3000/command/Sensor',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {'pin': pin, 'sensor': sensor}
+                });
+                timer = setInterval(function() {
+                    $.ajax({
+                        url: 'http://localhost:3000/command/Sensor',
+                        dataType: 'json',
+                        type: 'POST',
+                        data: {'pin': pin, 'sensor': sensor},
+                        success: function (result) {
+                            if (result['result'] === true) {
+                                if(result['pin'] === 'PIN00ON') {
+                                    $('#result00').html(result['value']);
+                                }
+                                if (result['pin'] === 'PIN01ON') {
+                                    $('#result01').html(result['value']);
+                                }
+                            }
+                        }
+                    });
+                }, 500);
+            });
+            $('.pin_off').click(function() {
+                clearInterval(timer);
+                const pin = $(this).attr('id');
+                $.ajax({
+                    url: 'http://localhost:3000/command/Sensor',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {'pin': pin, 'sensor': sensor, 'cmd_off': 'OFF'},
+                    success: function (result) {
+                        if (result['result'] === true) {
+                            $(function () {
+                                //alert(result['msg']);
+                            });
+                            $('#result').html(result['msg']);
+                        }
+                    }
+                });
+            });
+        });

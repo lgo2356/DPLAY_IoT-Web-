@@ -1,0 +1,85 @@
+DOCTYPE
+html
+    head
+        meta(charset='UTF-8')
+        title DPLAY IoT
+        script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+        script.
+            $(document).ready(function() {
+                $("button").click(function() {
+                    $.get("/led/" + $(this).attr("id"), function(data, status) {});
+                });
+            });
+        style
+            include ../style/mainLayout.css
+        body
+            div#wapper
+                div.member
+                    button.btn_member.Home(onclick="location.href='/'") HOME
+                header
+                    span(style='color:black') LED
+                div.menubar
+                    button.btn.LED(onclick="location.href='/LED'") LED
+                    button.btn.Sensor(onclick="location.href='/Sensor'") Sensor
+                    button.btn.Motor(onclick="location.href='/Motor'") DC Motor
+                    button.btn.Motor(onclick="location.href='/Servo'") Servo
+                    button.btn.Button(onclick="location.href='/Button'") Button
+                    button.btn.Button(onclick="location.href='/Tilt'") Tilt
+                    button.btn.Buzzer(onclick="location.href='/Buzzer'") Buzzer
+                    button.btn.Settings(onclick="location.href='/Settings'") Settings
+                .content
+                    //.LED_ON_group
+                    //    button#TESTLED13.btn_LED.LED(type='button') LED 13 ON
+                    //    button#TESTLED13_.btn_LED.LED(type='button') LED 13 OFF
+                    //    button#00ON.btn_LED.LED(type='button') 00 ON
+                    //    button#00OFF.btn_LED.LED(type='button') 00 OFF
+                    //    button#0001ON.btn_LED.LED(type='button') 00 01 ON
+                    //    button#0001OFF.btn_LED.LED(type='button') 00 01 OFF
+                    .LED_ON_group
+                        button#LED2.btn_LED.LED(type='button') LED 02 ON
+                        button#LED3.btn_LED.LED(type='button') LED 03 ON
+                        button#LED4.btn_LED.LED(type='button') LED 04 ON
+                        button#LED5.btn_LED.LED(type='button') LED 05 ON
+                        button#LED6.btn_LED.LED(type='button') LED 06 ON
+                        button#LED7.btn_LED.LED(type='button') LED 07 ON
+                    .LED_ON_group
+                        button#LED8.btn_LED.LED(type='button') LED 08 ON
+                        button#LED9.btn_LED.LED(type='button') LED 09 ON
+                        button#LED10.btn_LED.LED(type='button') LED 10 ON
+                        button#LED11.btn_LED.LED(type='button') LED 11 ON
+                        button#LED12.btn_LED.LED(type='button') LED 12 ON
+                        button#LED13.btn_LED.LED(type='button') LED 13 ON
+                    .LED_OFF_group
+                        button#LED8_.btn_LED.LED(type='button') LED 08 OFF
+                        button#LED9_.btn_LED.LED(type='button') LED 09 OFF
+                        button#LED10_.btn_LED.LED(type='button') LED 10 OFF
+                        button#LED11_.btn_LED.LED(type='button') LED 11 OFF
+                        button#LED12_.btn_LED.LED(type='button') LED 12 OFF
+                        button#LED13_.btn_LED.LED(type='button') LED 13 OFF
+                    .LED_OFF_group
+                        button#LED2_.btn_LED.LED(type='button') LED 02 OFF
+                        button#LED3_.btn_LED.LED(type='button') LED 03 OFF
+                        button#LED4_.btn_LED.LED(type='button') LED 04 OFF
+                        button#LED5_.btn_LED.LED(type='button') LED 05 OFF
+                        button#LED6_.btn_LED.LED(type='button') LED 06 OFF
+                        button#LED7_.btn_LED.LED(type='button') LED 07 OFF
+                    div#result BLANK
+            script.
+                $(document).ready(function() {
+                    $('.LED').click(function () {
+                        const pin = $(this).attr('id');
+                        $.ajax({
+                            url: 'http://localhost:3000/command/LED',
+                            //url: 'http://localhost:3000/LED',
+                            dataType: 'json',
+                            type: 'POST',
+                            data: {'msg':pin},
+                            success: function (result) {
+                                if (result['result'] === true) {
+                                    $('#result').html(result['msg']);
+                                }
+                            }
+                        });
+                    })
+                })
+

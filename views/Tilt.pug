@@ -1,0 +1,75 @@
+doctype html
+html
+head
+    meta(charset='UTF-8')
+    title DPLAY IoT
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+    style
+        include ../style/mainLayout.css
+body
+    div#wapper
+        div.member
+            button.btn_member.Home(onclick="location.href='/'") HOME
+        header
+            span(style='color:black') Tilt
+        div.menubar
+            button.btn.LED(onclick="location.href='/LED'") LED
+            button.btn.Sensor(onclick="location.href='/Sensor'") Sensor
+            button.btn.Motor(onclick="location.href='/Motor'") DC Motor
+            button.btn.Motor(onclick="location.href='/Servo'") Servo
+            button.btn.Button(onclick="location.href='/Button'") Button
+            button.btn.Button(onclick="location.href='/Tilt'") Tilt
+            button.btn.Buzzer(onclick="location.href='/Buzzer'") Buzzer
+            button.btn.Settings(onclick="location.href='/Settings'") Settings
+        div.content
+            div.button_pin_group
+                button#PIN02.button_pin.pin PIN02 ON
+                button#PIN03.button_pin.pin PIN03 ON
+                button#PIN04.button_pin.pin PIN04 ON
+                button#PIN05.button_pin.pin PIN05 ON
+                button#PIN06.button_pin.pin PIN06 ON
+                button#PIN07.button_pin.pin PIN07 ON
+            div.button_pin_group
+                button#PIN08.button_pin.pin PIN08 ON
+                button#PIN09.button_pin.pin PIN09 ON
+                button#PIN10.button_pin.pin PIN10 ON
+                button#PIN11.button_pin.pin PIN11 ON
+                button#PIN12.button_pin.pin PIN12 ON
+                button#PIN13.button_pin.pin PIN13 ON
+            div.button_pin_group
+                button#PIN02_.button_pin.pin PIN02 OFF
+                button#PIN03_.button_pin.pin PIN03 OFF
+                button#PIN04_.button_pin.pin PIN04 OFF
+                button#PIN05_.button_pin.pin PIN05 OFF
+                button#PIN06_.button_pin.pin PIN06 OFF
+                button#PIN07_.button_pin.pin PIN07 OFF
+            div.button_pin_group
+                button#PIN08_.button_pin.pin PIN08 OFF
+                button#PIN09_.button_pin.pin PIN09 OFF
+                button#PIN10_.button_pin.pin PIN10 OFF
+                button#PIN11_.button_pin.pin PIN11 OFF
+                button#PIN12_.button_pin.pin PIN12 OFF
+                button#PIN13_.button_pin.pin PIN13 OFF
+            div.button_pin_group
+                div#result(style='color:white') BLANK
+
+    script.
+        $(document).ready(function () {
+            $('.pin').click(function () {
+                const pin = $(this).attr('id');
+                $.ajax({
+                    url: 'http://localhost:3000/command/Tilt',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {'pin': pin},
+                    success: function (result) {
+                        if (result['result'] === true) {
+                            $(function () {
+                                //alert(result['msg']);
+                            });
+                            $('#result').html(result['msg']);
+                        }
+                    }
+                });
+            });
+        });
