@@ -50,26 +50,141 @@ body
                 button#PIN11_.button_pin.pin PIN11 OFF
                 button#PIN12_.button_pin.pin PIN12 OFF
                 button#PIN13_.button_pin.pin PIN13 OFF
+            div.sensor_value_group
+                div(style='color:white') Sensor value
+                br
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN02: &nbsp;
+                    span#result02.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN03: &nbsp;
+                    span#result03.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN04: &nbsp;
+                    span#result04.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN05: &nbsp;
+                    span#result05.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN06: &nbsp;
+                    span#result06.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN07: &nbsp;
+                    span#result07.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN08: &nbsp;
+                    span#result08.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN09: &nbsp;
+                    span#result09.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN10: &nbsp;
+                    span#result10.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN11: &nbsp;
+                    span#result11.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN12: &nbsp;
+                    span#result12.display_sensor_value(style='color:white') OFF
+                div  &nbsp;
+                    span.display_sensor_value(style='color:white') PIN13: &nbsp;
+                    span#result13.display_sensor_value(style='color:white') OFF
             div.button_pin_group
                 div#result(style='color:white') BLANK
 
     script.
         $(document).ready(function () {
+            var timer;
+            var sensor;
+            var msg;
+            $('.sensor').click(function () {
+                sensor = $(this).attr('id');
+            });
             $('.pin').click(function () {
+                clearInterval(timer);
                 const pin = $(this).attr('id');
                 $.ajax({
                     url: 'http://localhost:3000/command/Button',
                     dataType: 'json',
                     type: 'POST',
-                    data: {'pin': pin},
+                    data: {'pin': pin, 'sensor': sensor}
+                });
+                timer = setInterval(function () {
+                    $.ajax({
+                        url: 'http://localhost:3000/command/Button',
+                        dataType: 'json',
+                        type: 'POST',
+                        data: {'pin': pin, 'sensor': sensor},
+                        success: function (result) {
+                            if (result['result'] === true) {
+                                var pin00 = result['pin00'];
+                                var pin01 = result['pin01'];
+                                var pin02 = result['pin02'];
+                                var pin03 = result['pin03'];
+                                var pin04 = result['pin04'];
+                                var pin05 = result['pin05'];
+
+                                $('#result00').html(pin00);
+                                $('#result01').html(pin01);
+                                $('#result02').html(pin02);
+                                $('#result03').html(pin03);
+                                $('#result04').html(pin04);
+                                $('#result05').html(pin05);
+                            }
+                        }
+                    });
+                }, 500);
+            });
+            $('.pin_off').click(function () {
+                clearInterval(timer);
+                const pin = $(this).attr('id');
+                $.ajax({
+                    url: 'http://localhost:3000/command/Button',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {'pin': pin, 'sensor': sensor, 'cmd_off': 'OFF'},
                     success: function (result) {
                         if (result['result'] === true) {
-                            $(function () {
-                                //alert(result['msg']);
-                            });
-                            $('#result').html(result['msg']);
+                            if (result['pin'] === 'PIN00OFF') {
+                                $('#result00').html('OFF');
+                            }
+                            if (result['pin'] === 'PIN01OFF') {
+                                $('#result01').html('OFF');
+                            }
+                            if (result['pin'] === 'PIN02OFF') {
+                                $('#result02').html('OFF');
+                            }
+                            if (result['pin'] === 'PIN03OFF') {
+                                $('#result03').html('OFF');
+                            }
+                            if (result['pin'] === 'PIN04OFF') {
+                                $('#result04').html('OFF');
+                            }
+                            if (result['pin'] === 'PIN05OFF') {
+                                $('#result05').html('OFF');
+                            }
                         }
                     }
                 });
             });
         });
+    //script.
+    //    $(document).ready(function () {
+    //        $('.pin').click(function () {
+    //            const pin = $(this).attr('id');
+    //            $.ajax({
+    //                url: 'http://localhost:3000/command/Button',
+    //                dataType: 'json',
+    //                type: 'POST',
+    //                data: {'pin': pin},
+    //                success: function (result) {
+    //                    if (result['result'] === true) {
+    //                        $(function () {
+    //                            //alert(result['msg']);
+    //                        });
+    //                        $('#result').html(result['msg']);
+    //                    }
+    //                }
+    //            });
+    //        });
+    //    });

@@ -2,7 +2,17 @@ const net = require('net');
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const socketServer = net.createServer();
+const socketServer = net.createServer(function(client) {
+    client.on('end', function() {
+        console.log('Client disconnected');
+        socketServer.getConnections(function(err, count){
+            console.log('Remaining Connections: ' + count);
+        });
+    });
+    client.on('error', function(err) {
+        // console.log('Socket Error: ', JSON.stringify(err));
+    });
+});
 const app = express();
 const router = express.Router();
 
@@ -21,6 +31,13 @@ let timeout_msg; // time out controller
 
 socketServer.listen(3100, function() {
     console.log('3100 OK');
+
+    socketServer.on('close', function() {
+        console.log('Server terminated');
+    });
+    socketServer.on('error', function(err) {
+        console.log('Server error: ', JSON.stringify(err));
+    });
 });
 
 socketServer.on('error', function onError(error) {
@@ -29,17 +46,17 @@ socketServer.on('error', function onError(error) {
 });
 
 socketServer.on('connection', function onConnection(client) {
-    console.log('onConnect');
-    let address = client.address().address.split('.');
-    let address_0 = address[0].split(':');
+    console.log('Someone has connected the server.');
+    // let address = client.address().address.split('.');
+    // let address_0 = address[0].split(':');
+    //
+    // address[0] = address_0[3];
+    // address = address[0] + '.' + address[1] + '.' + address[2] + '.' + address[3];
+    // console.log(address);
 
-    address[0] = address_0[3];
-    address = address[0] + '.' + address[1] + '.' + address[2] + '.' + address[3];
-    console.log(address);
-
-    client_num.push(address + ':' + client_number);
+    client_num.push(client_number);
     client_number += 1;
-    console.log(client_num);
+    console.log('Client: ' + client_num);
 
     client_info = client;
     client.write('3100 OK\n');
@@ -47,9 +64,9 @@ socketServer.on('connection', function onConnection(client) {
     // client.write('EA02101303130300DE');
 
     timeout_msg = setInterval(function () {
-        try{
+        try {
             client.write('OK');
-        } catch (e) {
+        } catch(e) {
             console.log("Error: " + e);
             clearInterval(timeout_msg);
         }
@@ -57,31 +74,36 @@ socketServer.on('connection', function onConnection(client) {
 
     // 클라이언트가 데이터를 전송했을 때 이벤트를 걸어준다.
     client.on('data', function onClientData(buff) {
-        console.log('onClientData');
-
-        let msg = '';
+        let msg_tmp = new Uint8Array(buff);
+        const msg = [];
+        // console.log(msg);
         // console.log('Buffer: ' + buff);
         //
         // console.log('클라이언트가 보낸 데이터 :', buff);
         // console.log(buff[0].toString());
-        for(let i=0; i<buff.length; i++) {
-            msg += String.fromCharCode(buff[i]);
+        for(let i=0; i<buff.byteLength; i++) {
+            // msg += String.fromCharCode(buff[i]);
         }
-        console.log('buff: ' + buff);
-        console.log(msg);
+
+        for(let i=0; i<msg_tmp.length; i++) {
+            msg.push(msg_tmp[i]);
+        }
+
+        // let msg = ['SENSOR', msg_tmp[0], msg_tmp[1], msg_tmp[2], msg_tmp[3], msg_tmp[4], msg_tmp[5]];
+
+        console.log('Message from Client: ' + msg);
         buffer = msg;
-        //client.write('OK');
     });
 
-    client.on('close', function() {
-        console.log('Client disconnected.');
-        clearInterval(timeout_msg);
-    });
-
-    client.on('end', function() {
-        console.log('END');
-        clearInterval(timeout_msg);
-    });
+    // client.on('close', function() {
+    //     console.log('Client disconnected.');
+    //     clearInterval(timeout_msg);
+    // });
+    //
+    // client.on('end', function() {
+    //     console.log('END');
+    //     clearInterval(timeout_msg);
+    // });
 });
 
 exports.getClient = function() { return client_info; };

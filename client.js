@@ -12,9 +12,10 @@ client.on('connect', function onConnect() {
     // 연결 성공 시 서버에 임의 데이터 전송
     // this.write('Client OK')
     timer = setInterval(function() {
-        count_str = count_int.toString();
-        client.write(count_str);
-        count_int += 1;
+        // count_str = count_int.toString();
+        // client.write(count_str);
+        // count_int += 1;
+        client.write('Send message.');
     }, 1000);
 });
 

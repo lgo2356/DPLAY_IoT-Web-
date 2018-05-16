@@ -65,7 +65,6 @@ body
                 div  &nbsp;
                     span.display_sensor_value(style='color:white') PIN05: &nbsp;
                     span#result05.display_sensor_value(style='color:white') 0
-                div#result06 0
     script.
         $(document).ready(function () {
             var timer;
@@ -91,19 +90,52 @@ body
                         data: {'pin': pin, 'sensor': sensor},
                         success: function (result) {
                             if (result['result'] === true) {
-                                if(result['pin'] === 'PIN00ON') {
-                                    $('#result00').html(result['value']);
-                                }
-                                if (result['pin'] === 'PIN01ON') {
-                                    $('#result01').html(result['value']);
-                                }
+                                var pin00 = result['pin00'];
+                                var pin01 = result['pin01'];
+                                var pin02 = result['pin02'];
+                                var pin03 = result['pin03'];
+                                var pin04 = result['pin04'];
+                                var pin05 = result['pin05'];
+
+                                $('#result00').html(pin00);
+                                $('#result01').html(pin01);
+                                $('#result02').html(pin02);
+                                $('#result03').html(pin03);
+                                $('#result04').html(pin04);
+                                $('#result05').html(pin05);
+
+                                // if(result['pin'] === 'PIN00ON') {
+                                //     //$('#result00').html(result['value']);
+                                //     value = result['pin00'];
+                                //     $('#result00').html(value);
+                                // }
+                                // if (result['pin'] === 'PIN01ON') {
+                                //     value = result['pin01'];
+                                //     $('#result01').html(value);
+                                // }
+                                // if (result['pin'] === 'PIN02ON') {
+                                //     value = result['pin02'];
+                                //     $('#result02').html(value);
+                                // }
+                                // if (result['pin'] === 'PIN03ON') {
+                                //     value = result['pin03'];
+                                //     $('#result03').html(value);
+                                // }
+                                // if (result['pin'] === 'PIN04ON') {
+                                //     value = result['pin04'];
+                                //     $('#result04').html(value);
+                                // }
+                                // if (result['pin'] === 'PIN05ON') {
+                                //     value = result['pin05'];
+                                //     $('#result05').html(value);
+                                // }
                             }
                         }
                     });
-                }, 500);
+                }, 2000);
             });
             $('.pin_off').click(function() {
-                clearInterval(timer);
+                // clearInterval(timer);
                 const pin = $(this).attr('id');
                 $.ajax({
                     url: 'http://localhost:3000/command/Sensor',
@@ -112,10 +144,24 @@ body
                     data: {'pin': pin, 'sensor': sensor, 'cmd_off': 'OFF'},
                     success: function (result) {
                         if (result['result'] === true) {
-                            $(function () {
-                                //alert(result['msg']);
-                            });
-                            $('#result').html(result['msg']);
+                            if (result['pin'] === 'PIN00OFF') {
+                                $('#result00').html('0');
+                            }
+                            if (result['pin'] === 'PIN01OFF') {
+                                $('#result01').html('0');
+                            }
+                            if (result['pin'] === 'PIN02OFF') {
+                                $('#result02').html('0');
+                            }
+                            if (result['pin'] === 'PIN03OFF') {
+                                $('#result03').html('0');
+                            }
+                            if (result['pin'] === 'PIN04OFF') {
+                                $('#result04').html('0');
+                            }
+                            if (result['pin'] === 'PIN05OFF') {
+                                $('#result05').html('0');
+                            }
                         }
                     }
                 });
