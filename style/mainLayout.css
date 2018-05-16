@@ -1,0 +1,342 @@
+@charset "UTF-8";
+
+/* UI */
+#wapper {
+    width:96%;
+    margin:0 auto;
+}
+header {
+    width: 96.825%;
+    height:25px;
+    background: #95dee3;
+    font-weight: bold;
+    font-size: 19px;
+    text-align: left;
+    padding:1.5625% 1.5625% 1% 1.5625%;
+}
+.member {
+    width:96.825%;
+    height:20px;
+    background: #F3CF55;
+    text-align: right;
+    font-size: 12px;
+    padding:0.5% 1.5625% 0 1.5625%
+}
+.menubar {
+    width:96.825%;
+    height:40px;
+    background: #578CA9;
+    text-align: center;
+    font-weight:bold;
+    font-size:17px;
+    padding:1% 1.5625% 0 1.5625%;
+}
+
+/* 본문 */
+.content {
+    float:left;
+    width:96.825%;
+    height:400px;
+    padding:1.5625%;
+    background: #3F3C57;
+    font-weight: bold;
+    display: inline;
+}
+
+/* Basic button UI */
+.btn {
+    border:none;
+    background-color:inherit;
+    font-size:16px;
+    cursor:pointer;
+    display:inline-block;
+}
+.btn:hover {
+    background: #eee;
+}
+.btn_member {
+    border:none;
+    background-color:inherit;
+    font-size:12px;
+    cursor:pointer;
+    display:inline-block;
+}
+.LED {
+    color: #ffffff;
+    font-weight: bold;
+}
+.Sensor {
+    color:#363151;
+    font-weight: bold;
+}
+.Button {
+    color:#363151;
+    font-weight: bold;
+}
+.Motor {
+    color:#363151;
+    font-weight: bold;
+}
+.Buzzer {
+    color:#363151;
+    font-weight: bold;
+}
+.Settings {
+    color:#363151;
+    font-weight: bold;
+}
+.Home {
+    color:white;
+}
+.Search {
+    color:white;
+    font-weight: bold;
+}
+.btn_bluetooth_connect {
+    border:none;
+    background-color:inherit;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+}
+.Bluetooth_set {
+    float:right;
+    width:15%;
+    height:350px;
+    padding:1%;
+    background: #3F3C57;
+    font-weight: bold;
+}
+
+/* LED */
+.btn_LED {
+    border:none;
+    background-color:inherit;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+    margin-top: 10px;
+}
+.LED_ON_group {
+    float:left;
+    width:150px;
+    height:200px;
+    padding:1.5625%;
+    background: #3F3C57;
+    font-weight: bold;
+    display: inline;
+}
+.LED_OFF_group {
+    float:right;
+    width:150px;
+    height:200px;
+    padding:1.5625%;
+    background: #3F3C57;
+    font-weight: bold;
+    display: inline;
+}
+
+/* Sensor */
+.sensor_pin_group {
+    float:left;
+    width:150px;
+    height:200px;
+    padding:1.5625%;
+    background: #3F3C57;
+    font-weight: bold;
+    display: inline;
+}
+.sensor_value_group {
+    float:left;
+    width:200px;
+    height:200px;
+    padding:1.5625%;
+    background: #3F3C57;
+    font-weight: bold;
+    display: inline;
+}
+.btn_sensor_pin {
+    border:none;
+    background-color:inherit;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+    margin-top: 10px;
+}
+.pin {
+    color: #ffffff;
+    font-weight: bold;
+}
+.pin_off {
+    color: #ffffff;
+    font-weight: bold;
+}
+.btn_sensor {
+    border:none;
+    background-color:inherit;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+    margin-top: 10px;
+}
+.sensor {
+    color: #ffffff;
+    font-weight: bold;
+}
+.display_sensor_value {
+    display:inline;
+    margin-top:8px;
+    background-color:inherit;
+    font-size:22px;
+}
+
+/* Motor */
+.btn_motor {
+    border:none;
+    background-color:inherit;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+    text-align: center;
+    margin: 0 auto;
+}
+.motor_left_right {
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+.motor_direction {
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+.motor_speed {
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+.motor_group {
+    float:left;
+    width:150px;
+    height:200px;
+    padding:1.5625%;
+    background: #3F3C57;
+    font-weight: bold;
+    display: inline;
+    margin: 0 auto;
+}
+.edit_motor {
+    border:none;
+    width:150px;
+    height:20px;
+    background-color:white;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+    margin: 0 auto;
+}
+.motor_btn {
+    color: #ffffff;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Buzzer */
+.buzzer_group {
+    float:left;
+    width:150px;
+    height:200px;
+    padding:1.5625%;
+    background: #3F3C57;
+    font-weight: bold;
+    display: inline;
+    margin: 0 auto;
+}
+.buzzer_btn {
+    border:none;
+    background-color:inherit;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+    text-align: center;
+    margin: 10px auto;
+}
+.buzzer {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+/* Servo */
+.servo_pin_group {
+    float:left;
+    width:150px;
+    height:200px;
+    padding:1.5625%;
+    background: #3F3C57;
+    font-weight: bold;
+    display: inline;
+    margin: 0 auto;
+}
+.servo_btn {
+    border:none;
+    background-color:inherit;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+    text-align: center;
+    margin: 10px auto;
+}
+.edit_servo {
+    border:none;
+    width:150px;
+    height:20px;
+    background-color:white;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+    margin: 0 auto;
+}
+.servo_degree {
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Button(Sensor) */
+.button_pin_group {
+    float:left;
+    width:150px;
+    height:200px;
+    padding:1.5625%;
+    background: #3F3C57;
+    font-weight: bold;
+    display: inline;
+    margin: 0 auto;
+}
+.button_pin {
+    border:none;
+    background-color:inherit;
+    font-size:24px;
+    cursor:pointer;
+    display:block;
+    text-align: center;
+    margin: 10px auto;
+}
+
+select {
+    width: 170px;
+    height: 30px;
+    padding-left: 10px;
+    font-size: 18px;
+    color: #006fff;
+    border: 1px solid #006fff;
+    border-radius: 3px;
+}
+footer {
+    clear:both;
+    width: 100%;
+    height:120px;
+    text-align: center;
+    background-color:#c3590a;
+    padding-top:15px;
+}

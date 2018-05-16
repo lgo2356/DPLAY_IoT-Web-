@@ -1,0 +1,26 @@
+doctype html
+html(lang='en')
+    head
+        meta(charset='UTF-8')
+        title DPLAY IoT
+        //link(rel='stylesheet', href='../style/mainLayout.css', type='text/css')
+        style
+            include ../style/mainLayout.css
+    body
+        #wapper
+            .member
+                button.btn_member.Join(onclick="location.href='LED.html'") LOGIN
+                button.btn_member.Login(onclick="location.href='LED.html'") JOIN
+            header
+                span(style='color:black') DPLAY IoT
+            div.menubar
+                button.btn.LED(onclick="location.href='/LED'") LED
+                button.btn.Sensor(onclick="location.href='/Sensor'") Sensor
+                button.btn.Motor(onclick="location.href='/Motor'") DC Motor
+                button.btn.Motor(onclick="location.href='/Servo'") Servo
+                button.btn.Button(onclick="location.href='/Button'") Button
+                button.btn.Button(onclick="location.href='/Tilt'") Tilt
+                button.btn.Buzzer(onclick="location.href='/Buzzer'") Buzzer
+                button.btn.Settings(onclick="location.href='/Settings'") Settings
+            .content
+                span(style='color:white') BODY

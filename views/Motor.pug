@@ -1,0 +1,83 @@
+doctype html
+html
+head
+    meta(charset='UTF-8')
+    title DPLAY IoT
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+    style
+        include ../style/mainLayout.css
+body
+    div#wapper
+        div.member
+            button.btn_member.Home(onclick="location.href='/'") HOME
+        header
+            span(style='color:black') Motor
+        div.menubar
+            button.btn.LED(onclick="location.href='/LED'") LED
+            button.btn.Sensor(onclick="location.href='/Sensor'") Sensor
+            button.btn.Motor(onclick="location.href='/Motor'") DC Motor
+            button.btn.Motor(onclick="location.href='/Servo'") Servo
+            button.btn.Button(onclick="location.href='/Button'") Button
+            button.btn.Button(onclick="location.href='/Tilt'") Tilt
+            button.btn.Buzzer(onclick="location.href='/Buzzer'") Buzzer
+            button.btn.Settings(onclick="location.href='/Settings'") Settings
+        div.content
+            .motor_group
+                button#DCLEFT.btn_motor.motor_left_right(type='button') 왼쪽
+                button#DCRIGHT.btn_motor.motor_left_right(type='button') 오른쪽
+                button#DCALL.btn_motor.motor_left_right(type='button') 양쪽
+            .motor_group
+                button#DCADV.btn_motor.motor_direction(type='button') 전방
+                button#DCREV.btn_motor.motor_direction(type='button') 후방
+                button#DCSTOP.btn_motor.motor_direction(type='button') 정지
+            .motor_group
+                input#DCSPEED.edit_motor.motor_speed(type='text', style='color:black')
+                button#DCBTN.btn_motor.motor_btn BUTTON
+            div.sensor_pin_group
+                div#result(style='color:white') BLANK
+    script.
+        $(document).ready(function () {
+            var left_right;
+            var direction;
+            var speed;
+
+            $('.motor_left_right').click(function() {
+                left_right = $(this).attr('id');
+            });
+            $('.motor_direction').click(function() {
+                direction = $(this).attr('id');
+            });
+            $('.motor_btn').click(function() {
+                speed = $('.motor_speed').val();
+                $.ajax({
+                    url: 'http://localhost:3000/command/Motor',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {'left_right': left_right, 'direction': direction, 'speed': speed},
+                    success: function (result) {
+                        if (result['result'] === true) {
+                            $(function () {
+                                //alert(result['msg']);
+                            });
+                            $('#result').html(result['msg']);
+                        }
+                    }
+                });
+            });
+        });
+        //.LED_ON_group
+        //    select#dcmotor_selector.motor_(name='dcmotor')
+        //        option(value='', selected='') -- DC 모터 선택 --
+        //        option#DCMOTOR_LEFT.motor(value='left') 왼쪽
+        //        option#DCMOTOR_RIGHT.motor(value='right') 오른쪽
+        //        option#DCMOTOR_ALL.motor 양쪽
+        //    button#PIN00OFF.btn_sensor_pin.pin(type='button') PIN 00 OFF
+
+        // $('#dcmotor_selector option[value=left]').attr('selected', 'selected');
+        // var index = $('.motor_ option').index($('.motor_ option:selected'));
+        // const index = $('#DCMOTOR_LEFT option:selected').val();
+        // var index = $("#dcmotor_selector option:selected").val();
+        // $('option[name=apple]').index(function() {
+        //     sensor = $(this).attr('id');
+        // });
+        // style="text-align:center"

@@ -1,0 +1,69 @@
+doctype html
+html
+head
+    meta(charset='UTF-8')
+    title DPLAY IoT
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js')
+    style
+        include ../style/mainLayout.css
+body
+    div#wapper
+        div.member
+            button.btn_member.Home(onclick="location.href='/'") HOME
+        header
+            span(style='color:black') Servo
+        div.menubar
+            button.btn.LED(onclick="location.href='/LED'") LED
+            button.btn.Sensor(onclick="location.href='/Sensor'") Sensor
+            button.btn.Motor(onclick="location.href='/Motor'") DC Motor
+            button.btn.Motor(onclick="location.href='/Servo'") Servo
+            button.btn.Button(onclick="location.href='/Button'") Button
+            button.btn.Button(onclick="location.href='/Tilt'") Tilt
+            button.btn.Buzzer(onclick="location.href='/Buzzer'") Buzzer
+            button.btn.Settings(onclick="location.href='/Settings'") Settings
+        div.content
+            div.servo_pin_group
+                button#PIN02.servo_btn.pin PIN02
+                button#PIN03.servo_btn.pin PIN03
+                button#PIN04.servo_btn.pin PIN04
+                button#PIN05.servo_btn.pin PIN05
+                button#PIN06.servo_btn.pin PIN06
+                button#PIN07.servo_btn.pin PIN07
+            div.servo_pin_group
+                button#PIN08.servo_btn.pin PIN08
+                button#PIN09.servo_btn.pin PIN09
+                button#PIN10.servo_btn.pin PIN10
+                button#PIN11.servo_btn.pin PIN11
+                button#PIN12.servo_btn.pin PIN12
+                button#PIN13.servo_btn.pin PIN13
+            div.servo_pin_group
+                input#DEGREE.edit_servo.servo_degree(type='text', style='color:black')
+                button#SERVO.servo_btn.motor_btn BUTTON
+            div.sensor_pin_group
+                div#result(style='color:white') BLANK
+    script.
+        $(document).ready(function () {
+            var pin;
+            var degree;
+
+            $('.pin').click(function() {
+                pin = $(this).attr('id');
+            });
+            $('.motor_btn').click(function() {
+                degree = $('.servo_degree').val();
+                $.ajax({
+                    url: 'http://localhost:3000/command/Servo',
+                    dataType: 'json',
+                    type: 'POST',
+                    data: {'pin': pin, 'degree': degree},
+                    success: function (result) {
+                        if (result['result'] === true) {
+                            $(function () {
+                                //alert(result['msg']);
+                            });
+                            $('#result').html(result['msg']);
+                        }
+                    }
+                });
+            });
+        });
