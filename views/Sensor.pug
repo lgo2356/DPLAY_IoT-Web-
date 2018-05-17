@@ -69,19 +69,42 @@ body
         $(document).ready(function () {
             var timer;
             var sensor;
-            var msg;
+            var flag = [false, false, false, false, false, false];
             $('.sensor').click(function() {
                 sensor = $(this).attr('id');
             });
             $('.pin').click(function () {
                 clearInterval(timer);
-                const pin = $(this).attr('id');
+                var pin = $(this).attr('id');
+
+                switch(pin) {
+                    case 'PIN00ON':
+                        flag[0] = true;
+                        break;
+                    case 'PIN01ON':
+                        flag[1] = true;
+                        break;
+                    case 'PIN02ON':
+                        flag[2] = true;
+                        break;
+                    case 'PIN03ON':
+                        flag[3] = true;
+                        break;
+                    case 'PIN04ON':
+                        flag[4] = true;
+                        break;
+                    case 'PIN05ON':
+                        flag[5] = true;
+                        break;
+                }
+
                 $.ajax({
                     url: 'http://localhost:3000/command/Sensor',
                     dataType: 'json',
                     type: 'POST',
                     data: {'pin': pin, 'sensor': sensor}
                 });
+
                 timer = setInterval(function() {
                     $.ajax({
                         url: 'http://localhost:3000/command/Sensor',
@@ -103,40 +126,37 @@ body
                                 $('#result03').html(pin03);
                                 $('#result04').html(pin04);
                                 $('#result05').html(pin05);
-
-                                // if(result['pin'] === 'PIN00ON') {
-                                //     //$('#result00').html(result['value']);
-                                //     value = result['pin00'];
-                                //     $('#result00').html(value);
-                                // }
-                                // if (result['pin'] === 'PIN01ON') {
-                                //     value = result['pin01'];
-                                //     $('#result01').html(value);
-                                // }
-                                // if (result['pin'] === 'PIN02ON') {
-                                //     value = result['pin02'];
-                                //     $('#result02').html(value);
-                                // }
-                                // if (result['pin'] === 'PIN03ON') {
-                                //     value = result['pin03'];
-                                //     $('#result03').html(value);
-                                // }
-                                // if (result['pin'] === 'PIN04ON') {
-                                //     value = result['pin04'];
-                                //     $('#result04').html(value);
-                                // }
-                                // if (result['pin'] === 'PIN05ON') {
-                                //     value = result['pin05'];
-                                //     $('#result05').html(value);
-                                // }
+                                pin = '';
                             }
                         }
                     });
-                }, 2000);
+                }, 1000);
             });
+
             $('.pin_off').click(function() {
-                // clearInterval(timer);
                 const pin = $(this).attr('id');
+
+                switch (pin) {
+                    case 'PIN00OFF':
+                        flag[0] = false;
+                        break;
+                    case 'PIN01OFF':
+                        flag[1] = false;
+                        break;
+                    case 'PIN02OFF':
+                        flag[2] = false;
+                        break;
+                    case 'PIN03OFF':
+                        flag[3] = false;
+                        break;
+                    case 'PIN04OFF':
+                        flag[4] = false;
+                        break;
+                    case 'PIN05OFF':
+                        flag[5] = false;
+                        break;
+                }
+
                 $.ajax({
                     url: 'http://localhost:3000/command/Sensor',
                     dataType: 'json',
@@ -144,23 +164,22 @@ body
                     data: {'pin': pin, 'sensor': sensor, 'cmd_off': 'OFF'},
                     success: function (result) {
                         if (result['result'] === true) {
-                            if (result['pin'] === 'PIN00OFF') {
+                            var false_count = 0;
+                            for(var i=0; i<6; i++) {
+                                if(flag[i] === false) {
+                                    false_count += 1;
+                                }
+                            }
+
+                            if(false_count === 6) {
+                                clearInterval(timer);
                                 $('#result00').html('0');
-                            }
-                            if (result['pin'] === 'PIN01OFF') {
                                 $('#result01').html('0');
-                            }
-                            if (result['pin'] === 'PIN02OFF') {
                                 $('#result02').html('0');
-                            }
-                            if (result['pin'] === 'PIN03OFF') {
                                 $('#result03').html('0');
-                            }
-                            if (result['pin'] === 'PIN04OFF') {
                                 $('#result04').html('0');
-                            }
-                            if (result['pin'] === 'PIN05OFF') {
                                 $('#result05').html('0');
+                                false_count = 0;
                             }
                         }
                     }

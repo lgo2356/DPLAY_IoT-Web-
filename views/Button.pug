@@ -23,33 +23,33 @@ body
             button.btn.Settings(onclick="location.href='/Settings'") Settings
         div.content
             div.button_pin_group
-                button#PIN02.button_pin.pin PIN02 ON
-                button#PIN03.button_pin.pin PIN03 ON
-                button#PIN04.button_pin.pin PIN04 ON
-                button#PIN05.button_pin.pin PIN05 ON
-                button#PIN06.button_pin.pin PIN06 ON
-                button#PIN07.button_pin.pin PIN07 ON
+                button#PIN02ON.button_pin.pin PIN02 ON
+                button#PIN03ON.button_pin.pin PIN03 ON
+                button#PIN04ON.button_pin.pin PIN04 ON
+                button#PIN05ON.button_pin.pin PIN05 ON
+                button#PIN06ON.button_pin.pin PIN06 ON
+                button#PIN07ON.button_pin.pin PIN07 ON
             div.button_pin_group
-                button#PIN08.button_pin.pin PIN08 ON
-                button#PIN09.button_pin.pin PIN09 ON
-                button#PIN10.button_pin.pin PIN10 ON
-                button#PIN11.button_pin.pin PIN11 ON
-                button#PIN12.button_pin.pin PIN12 ON
-                button#PIN13.button_pin.pin PIN13 ON
+                button#PIN08ON.button_pin.pin PIN08 ON
+                button#PIN09ON.button_pin.pin PIN09 ON
+                button#PIN10ON.button_pin.pin PIN10 ON
+                button#PIN11ON.button_pin.pin PIN11 ON
+                button#PIN12ON.button_pin.pin PIN12 ON
+                button#PIN13ON.button_pin.pin PIN13 ON
             div.button_pin_group
-                button#PIN02_.button_pin.pin PIN02 OFF
-                button#PIN03_.button_pin.pin PIN03 OFF
-                button#PIN04_.button_pin.pin PIN04 OFF
-                button#PIN05_.button_pin.pin PIN05 OFF
-                button#PIN06_.button_pin.pin PIN06 OFF
-                button#PIN07_.button_pin.pin PIN07 OFF
+                button#PIN02OFF.button_pin.pin_off PIN02 OFF
+                button#PIN03OFF.button_pin.pin_off PIN03 OFF
+                button#PIN04OFF.button_pin.pin_off PIN04 OFF
+                button#PIN05OFF.button_pin.pin_off PIN05 OFF
+                button#PIN06OFF.button_pin.pin_off PIN06 OFF
+                button#PIN07OFF.button_pin.pin_off PIN07 OFF
             div.button_pin_group
-                button#PIN08_.button_pin.pin PIN08 OFF
-                button#PIN09_.button_pin.pin PIN09 OFF
-                button#PIN10_.button_pin.pin PIN10 OFF
-                button#PIN11_.button_pin.pin PIN11 OFF
-                button#PIN12_.button_pin.pin PIN12 OFF
-                button#PIN13_.button_pin.pin PIN13 OFF
+                button#PIN08OFF.button_pin.pin_off PIN08 OFF
+                button#PIN09OFF.button_pin.pin_off PIN09 OFF
+                button#PIN10OFF.button_pin.pin_off PIN10 OFF
+                button#PIN11OFF.button_pin.pin_off PIN11 OFF
+                button#PIN12OFF.button_pin.pin_off PIN12 OFF
+                button#PIN13OFF.button_pin.pin_off PIN13 OFF
             div.sensor_value_group
                 div(style='color:white') Sensor value
                 br
@@ -89,26 +89,65 @@ body
                 div  &nbsp;
                     span.display_sensor_value(style='color:white') PIN13: &nbsp;
                     span#result13.display_sensor_value(style='color:white') OFF
-            div.button_pin_group
-                div#result(style='color:white') BLANK
 
     script.
         $(document).ready(function () {
             var timer;
             var sensor;
-            var msg;
+            var flag = [false, false, false, false, false, false, false, false, false, false, false, false];
             $('.sensor').click(function () {
                 sensor = $(this).attr('id');
             });
             $('.pin').click(function () {
                 clearInterval(timer);
-                const pin = $(this).attr('id');
+                var pin = $(this).attr('id');
+
+                switch (pin) {
+                    case 'PIN02ON':
+                        flag[0] = true;
+                        break;
+                    case 'PIN03ON':
+                        flag[1] = true;
+                        break;
+                    case 'PIN04ON':
+                        flag[2] = true;
+                        break;
+                    case 'PIN05ON':
+                        flag[3] = true;
+                        break;
+                    case 'PIN06ON':
+                        flag[4] = true;
+                        break;
+                    case 'PIN07ON':
+                        flag[5] = true;
+                        break;
+                    case 'PIN08ON':
+                        flag[0] = true;
+                        break;
+                    case 'PIN09ON':
+                        flag[1] = true;
+                        break;
+                    case 'PIN10ON':
+                        flag[2] = true;
+                        break;
+                    case 'PIN11ON':
+                        flag[3] = true;
+                        break;
+                    case 'PIN012ON':
+                        flag[4] = true;
+                        break;
+                    case 'PIN13ON':
+                        flag[5] = true;
+                        break;
+                }
+
                 $.ajax({
                     url: 'http://localhost:3000/command/Button',
                     dataType: 'json',
                     type: 'POST',
                     data: {'pin': pin, 'sensor': sensor}
                 });
+
                 timer = setInterval(function () {
                     $.ajax({
                         url: 'http://localhost:3000/command/Button',
@@ -117,27 +156,141 @@ body
                         data: {'pin': pin, 'sensor': sensor},
                         success: function (result) {
                             if (result['result'] === true) {
-                                var pin00 = result['pin00'];
-                                var pin01 = result['pin01'];
                                 var pin02 = result['pin02'];
                                 var pin03 = result['pin03'];
                                 var pin04 = result['pin04'];
                                 var pin05 = result['pin05'];
+                                var pin06 = result['pin06'];
+                                var pin07 = result['pin07'];
+                                var pin08 = result['pin08'];
+                                var pin09 = result['pin09'];
+                                var pin10 = result['pin10'];
+                                var pin11 = result['pin11'];
+                                var pin12 = result['pin12'];
+                                var pin13 = result['pin13'];
 
-                                $('#result00').html(pin00);
-                                $('#result01').html(pin01);
+                                if(pin02 === '0') {
+                                    pin02 = 'OFF';
+                                } else if(pin02 === '1') {
+                                    pin02 = 'ON';
+                                }
+                                if (pin03 === '0') {
+                                    pin03 = 'OFF';
+                                } else if (pin03 === '1') {
+                                    pin03 = 'ON';
+                                }
+                                if (pin04 === '0') {
+                                    pin04 = 'OFF';
+                                } else if (pin04 === '1') {
+                                    pin04 = 'ON';
+                                }
+                                if (pin05 === '0') {
+                                    pin05 = 'OFF';
+                                } else if (pin05 === '1') {
+                                    pin05 = 'ON';
+                                }
+                                if (pin06 === '0') {
+                                    pin06 = 'OFF';
+                                } else if (pin06 === '1') {
+                                    pin06 = 'ON';
+                                }
+                                if (pin07 === '0') {
+                                    pin07 = 'OFF';
+                                } else if (pin07 === '1') {
+                                    pin07 = 'ON';
+                                }
+                                if (pin08 === '0') {
+                                    pin08 = 'OFF';
+                                } else if (pin08 === '1') {
+                                    pin08 = 'ON';
+                                }
+                                if (pin09 === '0') {
+                                    pin09 = 'OFF';
+                                } else if (pin09 === '1') {
+                                    pin09 = 'ON';
+                                }
+                                if (pin10 === '0') {
+                                    pin10 = 'OFF';
+                                } else if (pin10 === '1') {
+                                    pin10 = 'ON';
+                                }
+                                if (pin11 === '0') {
+                                    pin11 = 'OFF';
+                                } else if (pin11 === '1') {
+                                    pin11 = 'ON';
+                                }
+                                if (pin12 === '0') {
+                                    pin12 = 'OFF';
+                                } else if (pin12 === '1') {
+                                    pin12 = 'ON';
+                                }
+                                if (pin13 === '0') {
+                                    pin13 = 'OFF';
+                                } else if (pin13 === '1') {
+                                    pin13 = 'ON';
+                                }
+
                                 $('#result02').html(pin02);
                                 $('#result03').html(pin03);
                                 $('#result04').html(pin04);
                                 $('#result05').html(pin05);
+                                $('#result06').html(pin06);
+                                $('#result07').html(pin07);
+                                $('#result08').html(pin08);
+                                $('#result09').html(pin09);
+                                $('#result10').html(pin10);
+                                $('#result11').html(pin11);
+                                $('#result12').html(pin12);
+                                $('#result13').html(pin13);
+                                pin = '';
                             }
                         }
                     });
-                }, 500);
+                }, 1000);
             });
+
             $('.pin_off').click(function () {
-                clearInterval(timer);
                 const pin = $(this).attr('id');
+
+                switch (pin) {
+                    case 'PIN02OFF':
+                        flag[0] = false;
+                        break;
+                    case 'PIN03OFF':
+                        flag[1] = false;
+                        break;
+                    case 'PIN04OFF':
+                        flag[2] = false;
+                        break;
+                    case 'PIN05OFF':
+                        flag[3] = false;
+                        break;
+                    case 'PIN06OFF':
+                        flag[4] = false;
+                        break;
+                    case 'PIN07OFF':
+                        flag[5] = false;
+                        break;
+                    case 'PIN08OFF':
+                        flag[6] = false;
+                        break;
+                    case 'PIN09OFF':
+                        flag[7] = false;
+                        break;
+                    case 'PIN10OFF':
+                        flag[8] = false;
+                        break;
+                    case 'PIN11OFF':
+                        flag[9] = false;
+                        break;
+                    case 'PIN12OFF':
+                        flag[10] = false;
+                        break;
+                    case 'PIN13OFF':
+                        flag[11] = false;
+                        break;
+                }
+
                 $.ajax({
                     url: 'http://localhost:3000/command/Button',
                     dataType: 'json',
@@ -145,46 +298,31 @@ body
                     data: {'pin': pin, 'sensor': sensor, 'cmd_off': 'OFF'},
                     success: function (result) {
                         if (result['result'] === true) {
-                            if (result['pin'] === 'PIN00OFF') {
-                                $('#result00').html('OFF');
+                            var false_count = 0;
+                            for (var i = 0; i < 12; i++) {
+                                if (flag[i] === false) {
+                                    false_count += 1;
+                                }
                             }
-                            if (result['pin'] === 'PIN01OFF') {
-                                $('#result01').html('OFF');
-                            }
-                            if (result['pin'] === 'PIN02OFF') {
+
+                            if (false_count === 12) {
+                                clearInterval(timer);
                                 $('#result02').html('OFF');
-                            }
-                            if (result['pin'] === 'PIN03OFF') {
                                 $('#result03').html('OFF');
-                            }
-                            if (result['pin'] === 'PIN04OFF') {
                                 $('#result04').html('OFF');
-                            }
-                            if (result['pin'] === 'PIN05OFF') {
                                 $('#result05').html('OFF');
+                                $('#result06').html('OFF');
+                                $('#result07').html('OFF');
+                                $('#result08').html('OFF');
+                                $('#result09').html('OFF');
+                                $('#result10').html('OFF');
+                                $('#result11').html('OFF');
+                                $('#result12').html('OFF');
+                                $('#result13').html('OFF');
+                                false_count = 0;
                             }
                         }
                     }
                 });
             });
         });
-    //script.
-    //    $(document).ready(function () {
-    //        $('.pin').click(function () {
-    //            const pin = $(this).attr('id');
-    //            $.ajax({
-    //                url: 'http://localhost:3000/command/Button',
-    //                dataType: 'json',
-    //                type: 'POST',
-    //                data: {'pin': pin},
-    //                success: function (result) {
-    //                    if (result['result'] === true) {
-    //                        $(function () {
-    //                            //alert(result['msg']);
-    //                        });
-    //                        $('#result').html(result['msg']);
-    //                    }
-    //                }
-    //            });
-    //        });
-    //    });
