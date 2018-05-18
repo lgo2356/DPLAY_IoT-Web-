@@ -56,28 +56,9 @@ body
                     data: {'left_right': left_right, 'direction': direction, 'speed': speed},
                     success: function (result) {
                         if (result['result'] === true) {
-                            $(function () {
-                                //alert(result['msg']);
-                            });
-                            $('#result').html(result['msg']);
+                            $('#result').html('Success');
                         }
                     }
                 });
             });
         });
-        //.LED_ON_group
-        //    select#dcmotor_selector.motor_(name='dcmotor')
-        //        option(value='', selected='') -- DC 모터 선택 --
-        //        option#DCMOTOR_LEFT.motor(value='left') 왼쪽
-        //        option#DCMOTOR_RIGHT.motor(value='right') 오른쪽
-        //        option#DCMOTOR_ALL.motor 양쪽
-        //    button#PIN00OFF.btn_sensor_pin.pin(type='button') PIN 00 OFF
-
-        // $('#dcmotor_selector option[value=left]').attr('selected', 'selected');
-        // var index = $('.motor_ option').index($('.motor_ option:selected'));
-        // const index = $('#DCMOTOR_LEFT option:selected').val();
-        // var index = $("#dcmotor_selector option:selected").val();
-        // $('option[name=apple]').index(function() {
-        //     sensor = $(this).attr('id');
-        // });
-        // style="text-align:center"

@@ -98,13 +98,6 @@ body
                         break;
                 }
 
-                $.ajax({
-                    url: 'http://localhost:3000/command/Sensor',
-                    dataType: 'json',
-                    type: 'POST',
-                    data: {'pin': pin, 'sensor': sensor}
-                });
-
                 timer = setInterval(function() {
                     $.ajax({
                         url: 'http://localhost:3000/command/Sensor',

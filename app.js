@@ -1,6 +1,39 @@
 const net = require('net');
 const express = require('express');
 const bodyParser = require('body-parser');
+const main = require('./app.js');
+const logWriter = require('./logWriter');
+
+const app = express();
+const router = express.Router();
+
+let receive_flag = false;
+let connect_flag = true;
+
+exports.getClient = function() { return client_info; };
+exports.getBuffer = function() { return buffer; };
+exports.getTimeoutMsg = function() { return timeout_msg; };
+exports.setTimeout =  function(client) {
+    clearInterval(timeout_msg);
+    timeout_msg = setInterval(function () {
+        client.write('SERVER OK');
+        console.log('SERVER OK');
+    }, 2000);
+};
+exports.setReceiveState = function(flag) {
+    receive_flag = flag;
+};
+exports.getReceiveState = function() {
+    return receive_flag;
+};
+
+exports.setConnectState = function(flag) {
+    connect_flag = flag;
+};
+exports.getConnectState = function() {
+    return connect_flag;
+};
+
 
 const socketServer = net.createServer(function(client) {
     client.on('end', function() {
@@ -13,8 +46,6 @@ const socketServer = net.createServer(function(client) {
         // console.log('Socket Error: ', JSON.stringify(err));
     });
 });
-const app = express();
-const router = express.Router();
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -23,10 +54,7 @@ let client_info = 'empty';
 let buffer = 'empty';
 let count = 0;
 let client_num = [];
-let client_number = 0;
-
-let timer_1 = null;
-let timer_2 = null;// command timer/ sensor control
+let client_number = 1;
 let timeout_msg; // time out controller
 
 socketServer.listen(3100, function() {
@@ -36,7 +64,7 @@ socketServer.listen(3100, function() {
         console.log('Server terminated');
     });
     socketServer.on('error', function(err) {
-        console.log('Server error: ', JSON.stringify(err));
+        console.log('Server error: ', err.message);
     });
 });
 
@@ -45,14 +73,22 @@ socketServer.on('error', function onError(error) {
     console.log(error);
 });
 
+let connect_count = 0;
+
 socketServer.on('connection', function onConnection(client) {
     console.log('Someone has connected the server.');
-    // let address = client.address().address.split('.');
-    // let address_0 = address[0].split(':');
-    //
-    // address[0] = address_0[3];
-    // address = address[0] + '.' + address[1] + '.' + address[2] + '.' + address[3];
-    // console.log(address);
+
+    connect_flag = true;
+    connect_count += 1;
+    const date = new Date();
+    const month = date.getMonth();
+    const day = date.getDate();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+    const connect_time = month + '월 ' + day + '일 ' +hour + '시 ' + minute + '분 ' + second + '초';
+    console.log(connect_time);
+    logWriter.writeLog(connect_count + ': ' + connect_time);
 
     client_num.push(client_number);
     client_number += 1;
@@ -61,53 +97,25 @@ socketServer.on('connection', function onConnection(client) {
     client_info = client;
     client.write('3100 OK\n');
     client.write('Enjoy DPLAY IoT !\n');
-    // client.write('EA02101303130300DE');
 
-    timeout_msg = setInterval(function () {
-        try {
-            client.write('OK');
-        } catch(e) {
-            console.log("Error: " + e);
-            clearInterval(timeout_msg);
-        }
-    }, 2000);
+    main.setTimeout(client);
 
     // 클라이언트가 데이터를 전송했을 때 이벤트를 걸어준다.
     client.on('data', function onClientData(buff) {
+        receive_flag = true;
         let msg_tmp = new Uint8Array(buff);
         const msg = [];
-        // console.log(msg);
-        // console.log('Buffer: ' + buff);
-        //
-        // console.log('클라이언트가 보낸 데이터 :', buff);
-        // console.log(buff[0].toString());
-        for(let i=0; i<buff.byteLength; i++) {
-            // msg += String.fromCharCode(buff[i]);
-        }
 
         for(let i=0; i<msg_tmp.length; i++) {
             msg.push(msg_tmp[i]);
         }
 
-        // let msg = ['SENSOR', msg_tmp[0], msg_tmp[1], msg_tmp[2], msg_tmp[3], msg_tmp[4], msg_tmp[5]];
-
+        console.log('Flag: ' + receive_flag);
         console.log('Message from Client: ' + msg);
         buffer = msg;
     });
-
-    // client.on('close', function() {
-    //     console.log('Client disconnected.');
-    //     clearInterval(timeout_msg);
-    // });
-    //
-    // client.on('end', function() {
-    //     console.log('END');
-    //     clearInterval(timeout_msg);
-    // });
 });
 
-exports.getClient = function() { return client_info; };
-exports.getBuffer = function() { return buffer; };
 
 
 
@@ -130,16 +138,6 @@ app.get('/', function(req, res) {
 app.get('/LED', function(req, res) {
     console.log('LED Page');
     res.render('LED');
-
-    // const command = 'EA0341000141FF00DE';
-    // const command = 'EA0341000341FF00DE';
-    // // write command
-    // timer = setInterval(function() {
-    //     console.log('Running...');
-    //     client_info.write(command);
-    // }, 1000);
-    //
-    // console.log('fff');
 });
 
 app.get('/Settings', function(req, res) {
@@ -175,63 +173,4 @@ app.get('/Tilt', function(req, res) {
 app.get('/Buzzer', function(req, res) {
     console.log('Buzzer Page');
     res.render('Buzzer');
-});
-
-
-
-
-
-
-
-// TEST
-app.get('/TEST_Sensor00_ON', function(req, res) {
-    console.log('Sensor 00 ON');
-    // res.render('LED');
-    //
-    // clearInterval(timer);
-    // client_info.write('EA03410001410000DE');
-    timer_1 = setInterval(function() {
-        console.log('Running...');
-        client_info.write('EA0341000141FF00DE');
-    }, 1000);
-});
-
-app.get('/TEST_Sensor00_OFF', function(req, res) {
-    console.log('Sensor 00 OFF');
-    // res.render('LED');
-
-    clearInterval(timer_1);
-    // client_info.write('EA03410001410000DE');
-    client_info.write('EA03410001410000DE');
-});
-
-app.get('/TEST_Sensor0001_ON', function(req, res) {
-    console.log('Sensor 00 01 ON');
-    res.render('LED');
-
-    // clearInterval(timer);
-    // client_info.write('EA03410001410000DE');
-    timer_2 = setInterval(function() {
-        console.log('Running...');
-        client_info.write('EA0341000341FF00DE');
-    }, 1000);
-});
-
-app.get('/TEST_Sensor0001_OFF', function(req, res) {
-    console.log('Sensor 00 01 OFF');
-    res.render('LED');
-
-    if(timer_2 != null) {
-        clearInterval(timer_2);
-    }
-    // client_info.write('EA03410001410000DE');
-    client_info.write('EA03410003410000DE');
-});
-
-app.get('/TEST_LED13', function(req, res) {
-    console.log('LED 13 ON');
-    res.render('LED');
-
-    // client_info.write('EA03410001410000DE');
-    client_info.write('EA02100800080000DE');
 });

@@ -1,5 +1,6 @@
 const express = require('express');
 const main = require('../app');
+// const sendCommand = require('../send_command');
 const router = express.Router();
 
 let sensor_timer;
@@ -14,74 +15,113 @@ const pin = [1, 2, 4, 8, 16, 32, 64, 128, 1, 2, 4, 8];
 function Servo_control(pin_, degree) {
     console.log('Servo Control');
 
-    let pin_tmp = pin_;
+    let pin_tmp = null;
 
-    switch(pin_) {
-        case 'PIN02':
-            console.log('PIN02');
-            pin_tmp = 0;
-            break;
-        case 'PIN03':
-            console.log('PIN03');
-            pin_tmp = 1;
-            break;
-        case 'PIN04':
-            console.log('PIN04');
-            pin_tmp = 2;
-            break;
-        case 'PIN05':
-            console.log('PIN05');
-            pin_tmp = 3;
-            break;
-        case 'PIN06':
-            console.log('PIN06');
-            pin_tmp = 4;
-            break;
-        case 'PIN07':
-            console.log('PIN07');
-            pin_tmp = 5;
-            break;
-        case 'PIN08':
-            console.log('PIN08');
-            pin_tmp = 6;
-            break;
-        case 'PIN09':
-            console.log('PIN09');
-            pin_tmp = 7;
-            break;
-        case 'PIN10':
-            console.log('PIN10');
-            pin_tmp = 8;
-            break;
-        case 'PIN11':
-            console.log('PIN11');
-            pin_tmp = 9;
-            break;
-        case 'PIN12':
-            console.log('PIN12');
-            pin_tmp = 10;
-            break;
-        case 'PIN13':
-            console.log('PIN13');
-            pin_tmp = 11;
-            break;
-    }
+    // switch(pin_) {
+    //     case 'PIN02':
+    //         console.log('PIN02');
+    //         pin_tmp = 0;
+    //         break;
+    //     case 'PIN03':
+    //         console.log('PIN03');
+    //         pin_tmp = 1;
+    //         break;
+    //     case 'PIN04':
+    //         console.log('PIN04');
+    //         pin_tmp = 2;
+    //         break;
+    //     case 'PIN05':
+    //         console.log('PIN05');
+    //         pin_tmp = 3;
+    //         break;
+    //     case 'PIN06':
+    //         console.log('PIN06');
+    //         pin_tmp = 4;
+    //         break;
+    //     case 'PIN07':
+    //         console.log('PIN07');
+    //         pin_tmp = 5;
+    //         break;
+    //     case 'PIN08':
+    //         console.log('PIN08');
+    //         pin_tmp = 6;
+    //         break;
+    //     case 'PIN09':
+    //         console.log('PIN09');
+    //         pin_tmp = 7;
+    //         break;
+    //     case 'PIN10':
+    //         console.log('PIN10');
+    //         pin_tmp = 8;
+    //         break;
+    //     case 'PIN11':
+    //         console.log('PIN11');
+    //         pin_tmp = 9;
+    //         break;
+    //     case 'PIN12':
+    //         console.log('PIN12');
+    //         pin_tmp = 10;
+    //         break;
+    //     case 'PIN13':
+    //         console.log('PIN13');
+    //         pin_tmp = 11;
+    //         break;
+    // }
 
-    flag[pin_tmp] = true;
+    // flag[pin_tmp] = true;
     let cmd_upper_pin = 0;
     let cmd_lower_pin = 0;
     degree = parseInt(degree);
 
-    for(let i=0; i<flag.length; i++) {
-        if(i<8) {
-            if(flag[i]) {
-                cmd_lower_pin = cmd_lower_pin + pin[i];
-            }
-        } else {
-            if(flag[i]) {
-                cmd_upper_pin = cmd_upper_pin + pin[i];
-            }
-        }
+    // for(let i=0; i<flag.length; i++) {
+    //     if(i<8) {
+    //         if(flag[i]) {
+    //             cmd_lower_pin = cmd_lower_pin + pin[i];
+    //         }
+    //     } else {
+    //         if(flag[i]) {
+    //             cmd_upper_pin = cmd_upper_pin + pin[i];
+    //         }
+    //     }
+    // }
+
+    switch(pin_) {
+        case 'PIN02':
+            cmd_lower_pin = pin[0];
+            break;
+        case 'PIN03':
+            cmd_lower_pin = pin[1];
+            break;
+        case 'PIN04':
+            cmd_lower_pin = pin[2];
+            break;
+        case 'PIN05':
+            cmd_lower_pin = pin[3];
+            break;
+        case 'PIN06':
+            cmd_lower_pin = pin[4];
+            break;
+        case 'PIN07':
+            cmd_lower_pin = pin[5];
+            break;
+        case 'PIN08':
+            cmd_lower_pin = pin[6];
+            break;
+        case 'PIN09':
+            cmd_lower_pin = pin[7];
+            break;
+        case 'PIN10':
+            cmd_upper_pin = pin[8];
+            break;
+        case 'PIN11':
+            cmd_upper_pin = pin[9];
+            break;
+        case 'PIN12':
+            cmd_upper_pin = pin[10];
+            break;
+        case 'PIN13':
+            cmd_upper_pin = pin[11];
+            break;
     }
 
     if(cmd_lower_pin < 16) {
@@ -148,7 +188,6 @@ function Buzzer_on(melody) {
 // Motor control
 function Motor_on(left_right, direction, speed) {
     console.log('Motor on');
-
     console.log(left_right);
     console.log(direction);
     console.log(speed);
@@ -193,10 +232,12 @@ function Motor_on(left_right, direction, speed) {
         if(direction === 'DCADV') {
             const command = 'EA0230021A01' + speed + '00DE';
             console.log('Command: ' + command);
+            client.write('EA0230021A00' + speed + '00DE');
             client.write(command);
         } else if(direction === 'DCREV') {
             const command = 'EA0230021A02' + speed + '00DE';
             console.log('Command: ' + command);
+            client.write('EA0230021A00' + speed + '00DE');
             client.write(command);
         } else if(direction === 'DCSTOP') {
             const command = 'EA0230021A00' + speed + '00DE';
@@ -209,9 +250,19 @@ function Motor_on(left_right, direction, speed) {
 // Sensor on Function
 let sensor_timer_state = 'OFF';
 let pin_number_tmp = '';
+let cmd_state = true;
+const flag_timeout = setInterval(function() {
+    cmd_state = true;
+    console.log('out');
+}, 10000);
+
 function Sensor_control_on(pin_number, sensor) {
     console.log('Sensor on Function');
+    const timeout = main.getTimeoutMsg();
+    clearInterval(timeout);
     client = main.getClient();
+
+    let receive_flag = main.getReceiveState();
 
     let humidity = false;
     let cmd_upper_pin = 0;
@@ -240,6 +291,9 @@ function Sensor_control_on(pin_number, sensor) {
     if(humidity) { cmd_upper_pin = 2; }
     else { cmd_upper_pin = 0; }
 
+    // const cmd = sendCommand.pinControl(cmd_upper_pin, cmd_lower_pin);
+    // console.log(cmd);
+
     for(let i=0; i<flag.length; i++) {
         if(i<6) {
             if(flag[i]) {
@@ -261,15 +315,22 @@ function Sensor_control_on(pin_number, sensor) {
 
     if(cmd_lower_pin === '00') {
         clearInterval(sensor_timer);
+        main.setTimeout(client);
     }
 
     const command = 'EA03' + cmd_sensor + cmd_upper_pin + cmd_lower_pin + cmd_sensor + 'FF00DE';
-    console.log('Command: ' + command);
-    client.write(command);
+    if(receive_flag === true || cmd_state === true) {
+        console.log('Command: ' + command);
+        client.write(command);
+        client.write(command);
+        main.setReceiveState(false);
+        cmd_state = false;
+        // main.setConnectState(false);
+    }
 
-    // if(pin_number_tmp !== pin_number) {
-    //     sensor_timer_state = 'OFF';
-    // }
+    if(pin_number_tmp !== pin_number) {
+        sensor_timer_state = 'OFF';
+    }
 }
 
 // Sensor off Function
@@ -406,8 +467,6 @@ function LED_off(pin_number) {
 function Button_on() {
     console.log('Button Function');
 
-    let pin_tmp;
-
     let cmd_upper_pin = 0;
     let cmd_lower_pin = 0;
 
@@ -468,51 +527,9 @@ function Button_off(pin_number) {
 }
 
 // Tilt on Function
-function Tilt_on(pin_number) {
+function Tilt_on() {
     console.log('Tilt Function');
 
-    let pin_tmp;
-
-    switch(pin_number) {
-        case 'PIN02':
-            pin_tmp = 0;
-            break;
-        case 'PIN03':
-            pin_tmp = 1;
-            break;
-        case 'PIN04':
-            pin_tmp = 2;
-            break;
-        case 'PIN05':
-            pin_tmp = 3;
-            break;
-        case 'PIN06':
-            pin_tmp = 4;
-            break;
-        case 'PIN07':
-            pin_tmp = 5;
-            break;
-        case 'PIN08':
-            pin_tmp = 6;
-            break;
-        case 'PIN09':
-            pin_tmp = 7;
-            break;
-        case 'PIN10':
-            pin_tmp = 8;
-            break;
-        case 'PIN11':
-            pin_tmp = 9;
-            break;
-        case 'PIN12':
-            pin_tmp = 10;
-            break;
-        case 'PIN13':
-            pin_tmp = 11;
-            break;
-    }
-
-    flag[pin_tmp] = true;
     let cmd_upper_pin = 0;
     let cmd_lower_pin = 0;
 
@@ -539,6 +556,10 @@ function Tilt_on(pin_number) {
     cmd_lower_pin = cmd_lower_pin.toString(16);
     cmd_upper_pin = cmd_upper_pin.toString(16);
 
+    if(cmd_lower_pin === '00' && cmd_upper_pin === '00') {
+        clearInterval(tilt_timer);
+    }
+
     const command = 'EA0321' + cmd_upper_pin + cmd_lower_pin + '21FF00DE';
     console.log('Command: ' + command);
     client.write(command);
@@ -548,62 +569,9 @@ function Tilt_on(pin_number) {
 function Tilt_off(pin_number) {
     console.log('Tilt off Function');
 
-    let pin_tmp;
-
-    switch(pin_number) {
-        case 'PIN02':
-            pin_tmp = 0;
-            break;
-        case 'PIN03':
-            pin_tmp = 1;
-            break;
-        case 'PIN04':
-            pin_tmp = 2;
-            break;
-        case 'PIN05':
-            pin_tmp = 3;
-            break;
-        case 'PIN06':
-            pin_tmp = 4;
-            break;
-        case 'PIN07':
-            pin_tmp = 5;
-            break;
-        case 'PIN08':
-            pin_tmp = 6;
-            break;
-        case 'PIN09':
-            pin_tmp = 7;
-            break;
-        case 'PIN10':
-            pin_tmp = 8;
-            break;
-        case 'PIN11':
-            pin_tmp = 9;
-            break;
-        case 'PIN12':
-            pin_tmp = 10;
-            break;
-        case 'PIN13':
-            pin_tmp = 11;
-            break;
-    }
-
-    flag[pin_tmp] = true;
+    flag[pin_number] = false;
     let cmd_upper_pin = 0;
     let cmd_lower_pin = 0;
-
-    for(let i=0; i<flag.length; i++) {
-        if(i<8) {
-            if(flag[i]) {
-                cmd_lower_pin = cmd_lower_pin + pin[i];
-            }
-        } else {
-            if(flag[i]) {
-                cmd_upper_pin = cmd_upper_pin + pin[i];
-            }
-        }
-    }
 
     if(cmd_lower_pin < 16) {
         cmd_lower_pin = '0' + cmd_lower_pin.toString(16);
@@ -622,28 +590,269 @@ function Tilt_off(pin_number) {
 }
 
 // Tilt
+let tilt_timer;
 router.post('/Tilt', function(req, res) {
     console.log('Tilt POST');
 
     client = main.getClient();
 
     let pin = req.body.pin;
-    let msg = '';
+    let buff = new Array(main.getBuffer());
+    let value = buff.toString();
+    value = value.split(',');
 
-    if(client !== 'empty') {
-        // ON
-        if(pin.match(/_/)) {
-            Tilt_off(pin);
-        } else {
-            Tilt_on(pin);
+    if(pin !== pin_tmp) {
+        status = 'COMMAND_MODE';
+    }
+
+    if (client !== 'empty') {
+        // 같은 ON 버튼을 클릭했을 때 명령어 함수를 또 실행시키지 않기 위해 플래그를 설정한다.
+        if(status === 'COMMAND_MODE') {
+            // ON
+            // 항상 새로운 명령을 입력하기 위해 타이머를 설정한다.
+            const second = 1000;
+
+            if (pin === 'PIN02ON') {
+                console.log('PIN 02 ON');
+                const pin_number = 0;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN03ON') {
+                console.log('PIN 03 ON');
+                const pin_number = 1;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN04ON') {
+                console.log('PIN 04 ON');
+                const pin_number = 2;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN05ON') {
+                console.log('PIN 05 ON');
+                const pin_number = 3;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN06ON') {
+                console.log('PIN 06 ON');
+                const pin_number = 4;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN07ON') {
+                console.log('PIN 07 ON');
+                const pin_number = 5;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN08ON') {
+                console.log('PIN 08 ON');
+                const pin_number = 6;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN09ON') {
+                console.log('PIN 09 ON');
+                const pin_number = 7;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN10ON') {
+                console.log('PIN 10 ON');
+                const pin_number = 8;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN11ON') {
+                console.log('PIN 11 ON');
+                const pin_number = 9;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN12ON') {
+                console.log('PIN 12 ON');
+                const pin_number = 10;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            if (pin === 'PIN13ON') {
+                console.log('PIN 13 ON');
+                const pin_number = 11;
+                if (pin.match('ON')) {
+                    flag[pin_number] = true;
+                }
+                clearInterval(tilt_timer);
+                tilt_timer = setInterval(function() {
+                    Tilt_on();
+                }, second);
+            }
+            pin_tmp = pin;
+            status = 'SEND_MODE';
+        }
+
+        // OFF
+        if (pin === 'PIN02OFF') {
+            console.log('PIN 02 OFF');
+            const pin_number = 0;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN03OFF') {
+            console.log('PIN 03 OFF');
+            const pin_number = 1;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN04OFF') {
+            console.log('PIN 04 OFF');
+            const pin_number = 2;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN05OFF') {
+            console.log('PIN 05 OFF');
+            const pin_number = 3;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN06OFF') {
+            console.log('PIN 06 OFF');
+            const pin_number = 4;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN07OFF') {
+            console.log('PIN 07 OFF');
+            const pin_number = 5;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN08OFF') {
+            console.log('PIN 08 OFF');
+            const pin_number = 6;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN09OFF') {
+            console.log('PIN 09 OFF');
+            const pin_number = 7;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN10OFF') {
+            console.log('PIN 10 OFF');
+            const pin_number = 8;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN11OFF') {
+            console.log('PIN 11 OFF');
+            const pin_number = 9;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN12OFF') {
+            console.log('PIN 12 OFF');
+            const pin_number = 10;
+            Tilt_off(pin_number);
+        }
+        if (pin === 'PIN13OFF') {
+            console.log('PIN 13 OFF');
+            const pin_number = 11;
+            Tilt_off(pin_number);
         }
     } else {
         console.log('No connection');
+        // value = 'No connection';
+    }
+
+    // if(client !== 'empty') {
+    //     if(status === 'COMMAND_MODE') {
+    //         if(pin.match('OFF')) {
+    //             Button_off(pin);
+    //         } else {
+    //             clearInterval(button_timer);
+    //             button_timer = setInterval(function() {
+    //                 Button_on(pin);
+    //             }, 1000);
+    //         }
+    //
+    //         pin_tmp = pin;
+    //         status = 'SEND_MODE';
+    //     }
+    // } else {
+    //     console.log('No connection');
+    // }
+
+    if(value[0] === '65' && value[1] === '84') {
+        for(let i=0; i<12; i++) {
+            value[i] = 'OFF';
+        }
     }
 
     res.send({
         result: true,
-        msg: pin
+        pin: pin,
+        pin02: value[0],
+        pin03: value[1],
+        pin04: value[2],
+        pin05: value[3],
+        pin06: value[4],
+        pin07: value[5],
+        pin08: value[6],
+        pin09: value[7],
+        pin10: value[8],
+        pin11: value[9],
+        pin12: value[10],
+        pin13: value[11]
     });
 });
 
@@ -872,23 +1081,23 @@ router.post('/Button', function(req, res) {
         // value = 'No connection';
     }
 
-    if(client !== 'empty') {
-        if(status === 'COMMAND_MODE') {
-            if(pin.match('OFF')) {
-                Button_off(pin);
-            } else {
-                clearInterval(button_timer);
-                button_timer = setInterval(function() {
-                    Button_on(pin);
-                }, 1000);
-            }
-
-            pin_tmp = pin;
-            status = 'SEND_MODE';
-        }
-    } else {
-        console.log('No connection');
-    }
+    // if(client !== 'empty') {
+    //     if(status === 'COMMAND_MODE') {
+    //         if(pin.match('OFF')) {
+    //             Button_off(pin);
+    //         } else {
+    //             clearInterval(button_timer);
+    //             button_timer = setInterval(function() {
+    //                 Button_on(pin);
+    //             }, 1000);
+    //         }
+    //
+    //         pin_tmp = pin;
+    //         status = 'SEND_MODE';
+    //     }
+    // } else {
+    //     console.log('No connection');
+    // }
 
     if(value[0] === '65' && value[1] === '84') {
         for(let i=0; i<12; i++) {
@@ -970,44 +1179,46 @@ router.post('/Motor', function(req, res) {
     } else {
         console.log('No connection');
     }
+
+    res.send({
+        result: true,
+    });
 });
 
 // Sensor
-let status = 'COMMAND_MODE';
-let pin_tmp = '';
+let status = 'COMMAND_MODE'; // 최초에는 무조건 cmd 모드
+let pin_tmp = ''; // 이전 pin 값이 저장되는 변수
 router.post('/Sensor', function(req, res) {
     console.log('Sensor POST');
-    console.log('pin_tmp: ' + pin_tmp);
-
     client = main.getClient();
+
     const sensor = req.body.sensor;
     const pin = req.body.pin;
+    const off = req.body.cmd_off;
+
     let buff = new Array(main.getBuffer());
     let value = buff.toString();
     value = value.split(',');
-    const off = req.body.cmd_off;
 
-    // OFF를 눌렀을 때 flag를 true로 바꾸지 않기 위해 OFF 버튼을 막음
     if(pin !== pin_tmp) {
         status = 'COMMAND_MODE';
     }
 
     // Send command
     if (client !== 'empty') {
-        // 같은 ON 버튼을 클릭했을 때 명령어 함수를 또 실행시키지 않기 위해 플래그를 설정한다.
-        if(status === 'COMMAND_MODE') {
+        if(status === 'COMMAND_MODE') { // 함수 중복 실행 방지
             // ON
             // 항상 새로운 명령을 입력하기 위해 타이머를 설정한다.
-            const second = 1000;
+            const second = 1500; // timer 반복 시간
             if (pin === 'PIN00ON') {
                 console.log('PIN 00 ON');
-                const pin_number = 0;
-                if (pin.match('ON')) {
+                const pin_number = 0; // 해당 PIN의 flag 및 pin 배열 요소 번호
+                if (pin.match('ON')) { // 항상 PINON 버튼이 클릭되었을 경우에만 flag를 true로 설정한다.
                     flag[pin_number] = true;
                 }
-                clearInterval(sensor_timer);
+                clearInterval(sensor_timer); // timer를 중복 실행하는 것을 방지하기 위해 함수 실행전에 timer를 종료한다.
                 sensor_timer = setInterval(function() {
-                    Sensor_control_on(pin_number, sensor);
+                    Sensor_control_on(pin_number, sensor); // Sensor ON 함수
                 }, second);
             }
             if (pin === 'PIN01ON') {
@@ -1065,8 +1276,8 @@ router.post('/Sensor', function(req, res) {
                     Sensor_control_on(pin_number, sensor);
                 }, second);
             }
-            pin_tmp = pin;
-            status = 'SEND_MODE';
+            pin_tmp = pin; // 이전에 클릭된 pin과 현재 클릭된 pin을 비교해 알 수 있게 하기 위해 이전 pin 값을  저장한다.
+            status = 'SEND_MODE'; // 함수 중복 실행 방지를 위해 상태를 변경한다.
         }
 
         // OFF
@@ -1110,10 +1321,7 @@ router.post('/Sensor', function(req, res) {
         buff = 'OFF';
     }
 
-    console.log('PIN: ' + pin);
-    console.log('Value: ' + value);
-
-    if(value[0] === '65' && value[1] === '84') {
+    if(value[0] === '65' && value[1] === '84' || value[0] === 'empty') { // 단말기로 부터 입력되는 'AT ... ' 를 필터링 한다.
         for(let i=0; i<6; i++) {
             value[i] = '0';
         }
